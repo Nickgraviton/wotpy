@@ -221,7 +221,7 @@ class ModbusClient(BaseProtocolClient):
             return self._connections[key]
 
     @staticmethod
-    def _coerce_write_payload(config, value):
+    def _normalize_write_payload(config, value):
         function_code = config["function"]
 
         if function_code == ModbusFunction.WRITE_SINGLE_COIL:
@@ -245,7 +245,7 @@ class ModbusClient(BaseProtocolClient):
         raise ValueError("Function code is not writable: {}".format(function_code))
 
     @staticmethod
-    def _coerce_read_result(config, values):
+    def _normalize_read_result(config, values):
         if config.get("data_type"):
             return decode_modbus_registers(
                 values,
@@ -260,14 +260,9 @@ class ModbusClient(BaseProtocolClient):
 
     @property
     def protocol(self):
-        """Protocol of this client instance.
-        A member of the Protocols enum."""
-
         return Protocols.MODBUS
 
     def is_supported_interaction(self, td, name):
-        """Returns True if any of the forms for the interaction are Modbus forms."""
-
         forms = td.get_forms(name)
 
         return any(
@@ -276,13 +271,9 @@ class ModbusClient(BaseProtocolClient):
         )
 
     def set_security(self, security_scheme_dict, credentials):
-        """Modbus binding currently ignores WoT security metadata."""
-
         return False
 
     async def invoke_action(self, td, name, input_value, timeout=None):
-        """Invokes an action by writing to the configured Modbus resource."""
-
         forms = td.get_action_forms(name)
         form_href = self._pick_modbus_href(td, forms, op=InteractionVerbs.INVOKE_ACTION)
 
@@ -294,7 +285,7 @@ class ModbusClient(BaseProtocolClient):
         config = self._build_op_config(form, input_value=input_value)
         connection = await self._get_connection(config["host"], config["port"], config["timeout_ms"])
 
-        payload = self._coerce_write_payload(config, input_value)
+        payload = self._normalize_write_payload(config, input_value)
 
         await connection.write(
             function_code=config["function"],
@@ -307,8 +298,6 @@ class ModbusClient(BaseProtocolClient):
         return None
 
     async def write_property(self, td, name, value, timeout=None):
-        """Writes a property value to the configured Modbus resource."""
-
         forms = td.get_property_forms(name)
         form_href = self._pick_modbus_href(td, forms, op=InteractionVerbs.WRITE_PROPERTY)
 
@@ -323,7 +312,7 @@ class ModbusClient(BaseProtocolClient):
         config = self._build_op_config(form, input_value=value, is_write=True)
         connection = await self._get_connection(config["host"], config["port"], config["timeout_ms"])
 
-        payload = self._coerce_write_payload(config, value)
+        payload = self._normalize_write_payload(config, value)
 
         await connection.write(
             function_code=config["function"],
@@ -334,8 +323,6 @@ class ModbusClient(BaseProtocolClient):
         )
 
     async def read_property(self, td, name, timeout=None):
-        """Reads a property value from the configured Modbus resource."""
-
         forms = td.get_property_forms(name)
         form_href = self._pick_modbus_href(td, forms, op=InteractionVerbs.READ_PROPERTY)
 
@@ -357,11 +344,9 @@ class ModbusClient(BaseProtocolClient):
             unit_id=config["unit_id"],
         )
 
-        return self._coerce_read_result(config, values)
+        return self._normalize_read_result(config, values)
 
     def on_property_change(self, td, name):
-        """Subscribes to property changes by polling the Modbus resource."""
-
         forms = td.get_property_forms(name)
         form_href = self._pick_modbus_href(td, forms, op=InteractionVerbs.OBSERVE_PROPERTY)
 
@@ -413,8 +398,6 @@ class ModbusClient(BaseProtocolClient):
         return reactivex.create(subscribe)
 
     def on_event(self, td, name):
-        """Subscribes to a Modbus event form by polling the referenced resource."""
-
         forms = td.get_event_forms(name)
         form_href = self._pick_modbus_href(td, forms, op=InteractionVerbs.SUBSCRIBE_EVENT)
 
@@ -464,9 +447,7 @@ class ModbusClient(BaseProtocolClient):
             quantity=config["quantity"],
             unit_id=config["unit_id"],
         )
-        return self._coerce_read_result(config, values)
+        return self._normalize_read_result(config, values)
 
     def on_td_change(self, url):
-        """Subscribes to Thing Description changes on a remote Thing."""
-
         raise NotImplementedError

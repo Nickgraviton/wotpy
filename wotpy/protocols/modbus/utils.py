@@ -21,7 +21,7 @@ _FUNCTION_NAME_MAP = {
     ModbusFunctionName.READ_COIL: ModbusFunction.READ_COIL,
     ModbusFunctionName.READ_DISCRETE_INPUT: ModbusFunction.READ_DISCRETE_INPUT,
     ModbusFunctionName.READ_HOLDING_REGISTERS: ModbusFunction.READ_HOLDING_REGISTERS,
-    ModbusFunctionName.READ_INPUT_REGISTER: ModbusFunction.READ_INPUT_REGISTER,
+    ModbusFunctionName.READ_INPUT_REGISTERS: ModbusFunction.READ_INPUT_REGISTERS,
     ModbusFunctionName.WRITE_SINGLE_COIL: ModbusFunction.WRITE_SINGLE_COIL,
     ModbusFunctionName.WRITE_SINGLE_HOLDING_REGISTER: ModbusFunction.WRITE_SINGLE_HOLDING_REGISTER,
     ModbusFunctionName.WRITE_MULTIPLE_COILS: ModbusFunction.WRITE_MULTIPLE_COILS,
@@ -61,7 +61,7 @@ def modbus_function_to_entity(modbus_fun):
     if modbus_fun == ModbusFunction.READ_DISCRETE_INPUT:
         return ModbusEntity.DISCRETE_INPUT
 
-    if modbus_fun == ModbusFunction.READ_INPUT_REGISTER:
+    if modbus_fun == ModbusFunction.READ_INPUT_REGISTERS:
         return ModbusEntity.INPUT_REGISTER
 
     if modbus_fun in (ModbusFunction.READ_HOLDING_REGISTERS,

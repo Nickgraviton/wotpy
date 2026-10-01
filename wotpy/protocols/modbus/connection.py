@@ -15,8 +15,6 @@ from wotpy.protocols.modbus.enums import ModbusEntity, ModbusFunction
 
 
 class ModbusConnection:
-    """Connection wrapper around AsyncModbusTcpClient."""
-
     def __init__(self, host, port, timeout_ms=1000):
         self._host = host
         self._port = port
@@ -46,8 +44,6 @@ class ModbusConnection:
                 self._host, self._port))
 
     async def _call_with_unit(self, fn, *args, unit_id, **kwargs):
-        """Calls pymodbus methods handling both 'slave' and 'unit' kwargs."""
-
         try:
             return await fn(*args, slave=unit_id, **kwargs)
         except TypeError:
@@ -62,8 +58,6 @@ class ModbusConnection:
             raise RuntimeError("Modbus operation failed: {}".format(result))
 
     async def read(self, entity, address, quantity, unit_id):
-        """Reads coils/registers based on the requested Modbus entity."""
-
         async with self._lock:
             await self._connect()
 
@@ -102,8 +96,6 @@ class ModbusConnection:
             return list(result.registers[:quantity])
 
     async def write(self, function_code, address, quantity, unit_id, payload):
-        """Writes coils/registers depending on the selected Modbus function."""
-
         async with self._lock:
             await self._connect()
 

@@ -31,7 +31,7 @@ class ModbusFunction(EnumListMixin):
     READ_COIL = 1
     READ_DISCRETE_INPUT = 2
     READ_HOLDING_REGISTERS = 3
-    READ_INPUT_REGISTER = 4
+    READ_INPUT_REGISTERS = 4
     WRITE_SINGLE_COIL = 5
     WRITE_SINGLE_HOLDING_REGISTER = 6
     WRITE_MULTIPLE_COILS = 15
@@ -45,7 +45,7 @@ class ModbusFunctionName(EnumListMixin):
     READ_COIL = "readCoil"
     READ_DISCRETE_INPUT = "readDiscreteInput"
     READ_HOLDING_REGISTERS = "readHoldingRegisters"
-    READ_INPUT_REGISTER = "readInputRegister"
+    READ_INPUT_REGISTERS = "readInputRegisters"
     WRITE_SINGLE_COIL = "writeSingleCoil"
     WRITE_SINGLE_HOLDING_REGISTER = "writeSingleHoldingRegister"
     WRITE_MULTIPLE_COILS = "writeMultipleCoils"
@@ -74,8 +74,6 @@ class ModbusDataType(EnumListMixin):
 
 
 class ModbusVocabularyKeys(EnumListMixin):
-    """Vocabulary keys that can appear in TD forms for Modbus."""
-
     FUNCTION = "modv:function"
     ENTITY = "modv:entity"
     UNIT_ID = "modv:unitID"
