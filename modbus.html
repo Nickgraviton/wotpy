@@ -1,0 +1,353 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modbus &mdash; WoTPy 0.18.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=ba2e7b09"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Authentication Mechanisms" href="authentication.html" />
+    <link rel="prev" title="Zenoh" href="zenoh.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            WoTPy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started with wotpy</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="protocols.html">Protocol Bindings</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="http.html">HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mqtt.html">MQTT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coap.html">CoAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="websockets.html">WebSockets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zenoh.html">Zenoh</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Modbus</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#form-elements">Form elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vocabulary-terms">Vocabulary terms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-codes">Function codes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-types">Data types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interaction-model-mapping">Interaction Model mapping</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#read-property">Read Property</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#write-property">Write Property</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#invoke-action">Invoke Action</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#observe-event">Observe Event</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#example-thing-description">Example Thing Description</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="authentication.html">Authentication Mechanisms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">WoTPy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="protocols.html">Protocol Bindings</a></li>
+      <li class="breadcrumb-item active">Modbus</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modbus.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="modbus">
+<h1>Modbus<a class="headerlink" href="#modbus" title="Link to this heading"></a></h1>
+<p>This section describes the mapping between the high-level actions that can be executed on a Thing and the
+Modbus TCP requests sent to the device when using the Modbus Protocol Binding.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Modbus binding is <strong>client-only</strong>.</p>
+</div>
+<p>Every interaction is translated into a Modbus TCP request whose raw register or coil values are decoded into plain Python values.</p>
+<section id="form-elements">
+<h2>Form elements<a class="headerlink" href="#form-elements" title="Link to this heading"></a></h2>
+<p>Form elements consumed by the Modbus binding are described with the <code class="docutils literal notranslate"><span class="pre">modbus+tcp</span></code> URI scheme and the
+<code class="docutils literal notranslate"><span class="pre">modv:</span></code> vocabulary terms. All forms contain the following fields:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">op</span></code></p></td>
+<td><p>Interaction verb (e.g. <code class="docutils literal notranslate"><span class="pre">readproperty</span></code>) associated with this form element.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">href</span></code></p></td>
+<td><p>Contains the Modbus endpoint, the unit ID and the register/coil address.</p></td>
+</tr>
+</tbody>
+</table>
+<p>An example of a Modbus form <code class="docutils literal notranslate"><span class="pre">href</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>modbus+tcp://192.168.1.50:502/1/4096?quantity=2
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">192.168.1.50:502</span></code> is the Modbus TCP endpoint. The port defaults to <code class="docutils literal notranslate"><span class="pre">502</span></code> when omitted.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code> is the unit ID of the target device.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">4096</span></code> is the start address of the register or coil.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">quantity=2</span></code> is the optional number of registers/coils to read or write.</p></li>
+</ul>
+<p>A form <code class="docutils literal notranslate"><span class="pre">href</span></code> may also be relative when the Thing Description declares a <code class="docutils literal notranslate"><span class="pre">base</span></code>. In that case the
+base path is treated as a unit ID prefix:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">"base"</span><span class="p">:</span> <span class="s2">"modbus+tcp://192.168.1.50:502/1"</span>
+<span class="s2">"href"</span><span class="p">:</span> <span class="s2">"/4096?quantity=2"</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">modbus+tcp</span></code> URL scheme is used internally to select the appropriate protocol binding. Forms with any other scheme are ignored by this binding.</p>
+</div>
+</section>
+<section id="vocabulary-terms">
+<h2>Vocabulary terms<a class="headerlink" href="#vocabulary-terms" title="Link to this heading"></a></h2>
+<p>Values taken from the <code class="docutils literal notranslate"><span class="pre">href</span></code> can be overridden with the following form fields:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">modv:function</span></code></p></td>
+<td><p>Modbus function, either as a numeric code (e.g. <code class="docutils literal notranslate"><span class="pre">3</span></code>) or as a name (e.g. <code class="docutils literal notranslate"><span class="pre">readHoldingRegisters</span></code>).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">modv:entity</span></code></p></td>
+<td><p>Modbus entity: <code class="docutils literal notranslate"><span class="pre">Coil</span></code>, <code class="docutils literal notranslate"><span class="pre">DiscreteInput</span></code>, <code class="docutils literal notranslate"><span class="pre">InputRegister</span></code> or <code class="docutils literal notranslate"><span class="pre">HoldingRegister</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">modv:unitID</span></code></p></td>
+<td><p>Unit ID of the target device. Overrides the value taken from the <code class="docutils literal notranslate"><span class="pre">href</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">modv:address</span></code></p></td>
+<td><p>Start address. Overrides the value taken from the <code class="docutils literal notranslate"><span class="pre">href</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">modv:quantity</span></code></p></td>
+<td><p>Number of registers or coils involved in the operation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">modv:type</span></code></p></td>
+<td><p>XSD data type (e.g. <code class="docutils literal notranslate"><span class="pre">xsd:float</span></code>) used to decode the raw registers.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">modv:pollingTime</span></code></p></td>
+<td><p>Polling interval in milliseconds used when observing properties and events. Defaults to <code class="docutils literal notranslate"><span class="pre">2000</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">modv:timeout</span></code></p></td>
+<td><p>Request timeout in milliseconds. Defaults to <code class="docutils literal notranslate"><span class="pre">1000</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">modv:mostSignificantByte</span></code></p></td>
+<td><p>Whether registers are decoded in big-endian byte order. Defaults to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">modv:mostSignificantWord</span></code></p></td>
+<td><p>Whether multi-register values are decoded most significant word first. Defaults to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="function-codes">
+<h2>Function codes<a class="headerlink" href="#function-codes" title="Link to this heading"></a></h2>
+<p>The following function names and codes are understood by the binding:</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">modv:function</span></code> is not present the binding infers the function code from <code class="docutils literal notranslate"><span class="pre">modv:entity</span></code>, the
+<code class="docutils literal notranslate"><span class="pre">quantity</span></code> and whether the operation is a read or a write. If <code class="docutils literal notranslate"><span class="pre">modv:entity</span></code> is missing as well,
+<code class="docutils literal notranslate"><span class="pre">HoldingRegister</span></code> is assumed.</p>
+</section>
+<section id="data-types">
+<h2>Data types<a class="headerlink" href="#data-types" title="Link to this heading"></a></h2>
+<p>When <code class="docutils literal notranslate"><span class="pre">modv:type</span></code> is present the raw registers are decoded into a single scalar value. The number of
+registers needed for the type is also inferred from it when <code class="docutils literal notranslate"><span class="pre">quantity</span></code> is not given:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Registers</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">xsd:boolean</span></code></p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">xsd:byte</span></code></p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">xsd:unsignedByte</span></code></p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">xsd:short</span></code></p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">xsd:unsignedShort</span></code></p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">xsd:int</span></code></p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">xsd:integer</span></code></p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">xsd:unsignedInt</span></code></p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">xsd:float</span></code></p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">xsd:decimal</span></code></p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">xsd:long</span></code></p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">xsd:unsignedLong</span></code></p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">xsd:double</span></code></p></td>
+<td><p>4</p></td>
+</tr>
+</tbody>
+</table>
+<p>If <code class="docutils literal notranslate"><span class="pre">modv:type</span></code> is not present, a read of a single register or coil returns the scalar value, while a
+read of multiple registers or coils returns a list.</p>
+</section>
+<section id="interaction-model-mapping">
+<h2>Interaction Model mapping<a class="headerlink" href="#interaction-model-mapping" title="Link to this heading"></a></h2>
+<section id="read-property">
+<h3>Read Property<a class="headerlink" href="#read-property" title="Link to this heading"></a></h3>
+<p>The binding issues the read request matching the resolved entity:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Coil</span></code> → <em>Read Coils</em> (code <code class="docutils literal notranslate"><span class="pre">1</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DiscreteInput</span></code> → <em>Read Discrete Inputs</em> (code <code class="docutils literal notranslate"><span class="pre">2</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HoldingRegister</span></code> → <em>Read Holding Registers</em> (code <code class="docutils literal notranslate"><span class="pre">3</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InputRegister</span></code> → <em>Read Input Registers</em> (code <code class="docutils literal notranslate"><span class="pre">4</span></code>)</p></li>
+</ul>
+</section>
+<section id="write-property">
+<h3>Write Property<a class="headerlink" href="#write-property" title="Link to this heading"></a></h3>
+<p>The binding issues the write request matching the resolved entity and quantity:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Coil</span></code> → <em>Write Single Coil</em> (code <code class="docutils literal notranslate"><span class="pre">5</span></code>) or <em>Write Multiple Coils</em> (code <code class="docutils literal notranslate"><span class="pre">15</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HoldingRegister</span></code> → <em>Write Single Register</em> (code <code class="docutils literal notranslate"><span class="pre">6</span></code>) or <em>Write Multiple Registers</em> (code <code class="docutils literal notranslate"><span class="pre">16</span></code>)</p></li>
+</ul>
+</section>
+<section id="invoke-action">
+<h3>Invoke Action<a class="headerlink" href="#invoke-action" title="Link to this heading"></a></h3>
+<p>An action invocation is mapped to the same write requests used for properties, taking the action input
+as the payload. Modbus write responses carry no payload, so the invocation always resolves to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</section>
+<section id="observe-event">
+<h3>Observe Event<a class="headerlink" href="#observe-event" title="Link to this heading"></a></h3>
+<p>As with property observation, events are produced by polling the read request defined in the event form
+every <code class="docutils literal notranslate"><span class="pre">modv:pollingTime</span></code> milliseconds. Unlike property observation, every poll emits an event
+regardless of whether the value changed.</p>
+</section>
+</section>
+<section id="example-thing-description">
+<h2>Example Thing Description<a class="headerlink" href="#example-thing-description" title="Link to this heading"></a></h2>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urn:org:fundacionctic:thing:modbus-sensor"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Modbus Sensor"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"base"</span><span class="p">:</span><span class="w"> </span><span class="s2">"modbus+tcp://192.168.1.50:502/1"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"readOnly"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"forms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">"op"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"readproperty"</span><span class="p">,</span><span class="w"> </span><span class="s2">"observeproperty"</span><span class="p">],</span>
+<span class="w">                    </span><span class="nt">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/4096"</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">"modv:function"</span><span class="p">:</span><span class="w"> </span><span class="s2">"readHoldingRegisters"</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">"modv:type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xsd:float"</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">"modv:pollingTime"</span><span class="p">:</span><span class="w"> </span><span class="mi">5000</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">]</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">"relay"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"forms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">"op"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"readproperty"</span><span class="p">,</span><span class="w"> </span><span class="s2">"writeproperty"</span><span class="p">],</span>
+<span class="w">                    </span><span class="nt">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/16"</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">"modv:entity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Coil"</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="zenoh.html" class="btn btn-neutral float-left" title="Zenoh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="authentication.html" class="btn btn-neutral float-right" title="Authentication Mechanisms" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2018, Fundacion CTIC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

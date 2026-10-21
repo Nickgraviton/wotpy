@@ -12,3 +12,4 @@ Currently the API of the following protocols only works with a JSON representati
     coap
     websockets
     zenoh
+    modbus
