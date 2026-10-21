@@ -39,6 +39,7 @@ class Protocols(EnumListMixin):
     MQTT = "MQTT"
     RTSP = "RTSP"
     ZENOH = "ZENOH"
+    MODBUS = "MODBUS"
 
 
 class InteractionVerbs(EnumListMixin):
