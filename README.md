@@ -8,6 +8,12 @@
 </picture>
 </h1>
 
+[![PyPI version](https://img.shields.io/pypi/v/wotpy.svg?style=flat-square)](https://pypi.org/project/wotpy/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/wotpy.svg?style=flat-square)](https://pypi.org/project/wotpy/)
+[![License](https://img.shields.io/github/license/eclipse-thingweb/wotpy.svg?style=flat-square)](https://github.com/eclipse-thingweb/wotpy/blob/master/LICENSE)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/eclipse-thingweb/wotpy/test-wotpy.yaml?branch=master&style=flat-square&label=tests)](https://github.com/eclipse-thingweb/wotpy/actions)
+[![Documentation Status](https://img.shields.io/badge/docs-latest-blue.svg?style=flat-square)](https://eclipse-thingweb.github.io/wotpy/)
+
 > A WoT runtime in Python for Thing and Consumer applications
 
 ## Introduction
@@ -18,7 +24,7 @@ You can find the documentation at <https://eclipse-thingweb.github.io/wotpy/>.
 
 ### About the current version
 
-Please note that there's still a **significant pending issue**. Although the project is currently in a reasonably stable state, it does not implement the current version of the W3C WoT specifications. Specifically, the version at the time of writing is based on the following **outdated** references:
+⚠️ Please note that there's still a **significant pending issue**. Although the project is currently in a reasonably stable state, it does not implement the current version of the W3C WoT specifications. Specifically, the version at the time of writing is based on the following **outdated** references:
 
 * K. Kajimoto, M. Kovatsch, and U. Davuluru, ‘Web of Things (WoT) Architecture’, W3C, W3C First Public Working Draft, Sep. 2017. [Online]. Available: https://www.w3.org/TR/2017/WD-wot-architecture-20170914/
 * Z. Kis, K. Nimura, D. Peintner, and J. Hund, ‘Web of Things (WoT) Scripting API’, W3C, W3C Working Draft, Nov. 2018. [Online]. Available: https://www.w3.org/TR/2018/WD-wot-scripting-api-20181129/
@@ -30,22 +36,29 @@ Please note that there's still a **significant pending issue**. Although the pro
 
 In summary, wotpy is mature enough to be used in projects; in fact, it is being used in production at [CTIC](https://github.com/fundacionctic). However, it is not an adequate representation of the current status of the W3C WoT. We greatly encourage you to check the [Developer Resources section on the WoT website](https://www.w3.org/WoT/developers) to find out about the current state of the art.
 
-## Features
+## Protocol Support
 
-The wotpy project provides fully functional implementations of four different protocol bindings: MQTT, HTTP, WebSockets, and CoAP. Moreover, it offers a discovery implementation based on Multicast DNS.
+The wotpy project provides implementations of these protocol bindings:
+- HTTP
+- WebSockets
+- CoAP
+- MQTT
+- Zenoh
+- Modbus
 
 These bindings are built on top of the following dependencies, which are instrumental to the project:
 
-|            Feature  | Implementation based on                                                      |
-| ------------------: | ---------------------------------------------------------------------------- |
-|       HTTP binding  | [tornadoweb/tornado](https://github.com/tornadoweb/tornado)                  |
-| WebSockets binding  | [tornadoweb/tornado](https://github.com/tornadoweb/tornado)                  |
-|       CoAP binding  | [chrysn/aiocoap](https://github.com/chrysn/aiocoap)                          |
-|       MQTT binding  | [sbtinstruments/aiomqtt](https://github.com/sbtinstruments/aiomqtt)          |
-|       Zenoh binding | [eclipse-zenoh/zenoh-python](https://github.com/eclipse-zenoh/zenoh-python)  |
-
+| Feature             | Implementation based on                                                      | Client | Server |
+| ------------------- | ---------------------------------------------------------------------------- | :----: | :----: |
+| HTTP binding        | [tornadoweb/tornado](https://github.com/tornadoweb/tornado)                  | ✔️     | ✔️     |
+| WebSockets binding  | [tornadoweb/tornado](https://github.com/tornadoweb/tornado)                  | ✔️     | ✔️     |
+| CoAP binding        | [chrysn/aiocoap](https://github.com/chrysn/aiocoap)                          | ✔️     | ✔️     |
+| MQTT binding        | [sbtinstruments/aiomqtt](https://github.com/sbtinstruments/aiomqtt)          | ✔️     | ✔️     |
+| Zenoh binding       | [eclipse-zenoh/zenoh-python](https://github.com/eclipse-zenoh/zenoh-python)  | ✔️     | ✔️     |
+| Modbus binding      | [pymodbus-dev/pymodbus](https://github.com/pymodbus-dev/pymodbus)            | ✔️     | -      |
 
 ## Installation
+Install wotpy using pip:
 ```sh
 pip install wotpy
 ```
@@ -54,23 +67,31 @@ pip install wotpy
 
 The development workflow of wotpy is based on [Taskfile](https://taskfile.dev/installation/) v3.28 or later, so that's the first thing you need to install. If you are on Windows, see [Running tests on Windows](#running-tests-on-windows).
 
-Then, to create a virtual environment under `.venv`, and install the project in development mode with all the test dependencies, run:
-* Using `pip`:
-```sh
+Create a `.venv` virtual environment and install the project in development mode with its test dependencies.
+
+Using `pip`:
+
+```bash
 task venv
 ```
-* Using `uv`:
-```sh
+
+Using `uv`:
+
+```bash
 task uv-venv
 ```
 
 If `task` is not available or you have an older version, you can run the underlying commands directly:
-* Using `pip`:
+
+Using `pip`:
+
 ```sh
 python3 -m venv .venv
 .venv/bin/pip install -U -e ".[tests]"
 ```
-* Using `uv`:
+
+Using `uv`:
+
 ```sh
 uv venv .venv
 uv sync --extra tests
@@ -141,7 +162,8 @@ task: [docker-tests] echo "✅ Tests for Python 3.10 completed successfully"
 ✅ Tests for Python 3.10 completed successfully
 ```
 
-An MQTT broker is needed as a dependency for the MQTT binding tests. The task will automatically create a new container based on the [eclipse-mosquitto image](https://hub.docker.com/_/eclipse-mosquitto) and expose the broker port to the host. The `WOTPY_TESTS_MQTT_BROKER_URL` environment variable will be set to the broker URL.
+An MQTT broker is needed as a dependency for the MQTT binding tests and a Zenoh router is needed fo the Zenoh binding tests. The task will automatically create new docker images and set the appropriate env variables `WOTPY_TESTS_MQTT_BROKER_URL` and `WOTPY_TESTS_ZENOH_ROUTER_URL`.
+
 
 ## Publishing New Versions
 
