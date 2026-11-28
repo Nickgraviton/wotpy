@@ -1,0 +1,28 @@
+{# Version dropdown for the furo sidebar.
+  `versions`/`current_version` come from sphinx_multiversion#}
+{% if current_version is defined and versions %}
+<style>
+  .version-switcher { padding: 0.4rem 1rem; position: relative; }
+  .version-switcher summary { cursor: pointer; list-style: none; font-size: 0.85rem; }
+  .version-switcher summary::after { content: " ▾"; }
+  .version-switcher ul { position: absolute; left: 1rem; right: 1rem; z-index: 100;
+    margin: 0.2rem 0 0; padding: 0.3rem 0; list-style: none; max-height: 16rem; overflow: auto;
+    background-color: var(--color-background-primary, #fff);
+    border: 1px solid var(--color-background-border, #ddd); border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25); }
+  .version-switcher li a { display: block; padding: 0.2rem 0.6rem;
+    font-size: 0.85rem; color: inherit; text-decoration: none; }
+  .version-switcher li a:hover { background: var(--color-background-hover, #eee); }
+  .version-switcher li.current a { font-weight: bold; }
+</style>
+<details class="version-switcher">
+  <summary>{{ current_version.name }}</summary>
+  <ul>
+    {% for v in versions %}
+    <li{% if v.name == current_version.name %} class="current"{% endif %}>
+      <a href="{{ v.url }}">{{ v.name }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+</details>
+{% endif %}

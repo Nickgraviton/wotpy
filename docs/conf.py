@@ -2,6 +2,7 @@
 
 # Copyright (c) 2018 CTIC Centro Tecnologico
 # Copyright (c) 2025 National Technical University of Athens
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -45,7 +46,7 @@ from wotpy.__version__ import __version__
 # -- Project information -----------------------------------------------------
 
 project = u'WoTPy'
-copyright = u'2018, Fundacion CTIC'
+copyright = u'2018-2026 CTIC Centro Tecnologico, NTUA, Eclipse Foundation contributors'
 author = u'Andres Garcia Mangas'
 
 # The short X.Y version
@@ -67,8 +68,16 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.autosummary',
-    'sphinx.ext.githubpages'
+    'sphinx.ext.githubpages',
+    'sphinx_multiversion'
 ]
+
+# Only build release tags higher than v0.17.x
+smv_tag_whitelist = r'^v(?:0\.(?:1[7-9]|[2-9]\d)\.\d+|[1-9]\d*\.\d+\.\d+)$'
+# Also build the develop branch as a 'develop/' preview alongside the tags
+smv_branch_whitelist = r'^develop$'
+# The develop branch is published as develop/ and is what the site root redirects to
+smv_latest_version = 'develop'
 
 autodoc_default_options = {
     'members': True,
@@ -120,13 +129,24 @@ pygments_style = 'sphinx'
 # a list of builtin themes.
 #
 
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'furo'
+
+html_title = 'WoTPy'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    'footer_icons': [
+        {'name': 'GitHub', 'url': 'https://github.com/eclipse-thingweb/wotpy',
+         'class': '',
+         'html': '<svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>'},
+        {'name': 'PyPI', 'url': 'https://pypi.org/project/wotpy/',
+         'class': '',
+         'html': '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5zm0 2.3 6.5 3.6L12 11.5 5.5 7.9 12 4.3zM5 9.7l6 3.3v6.2l-6-3.3V9.7zm8 9.5v-6.2l6-3.3v6.2l-6 3.3z"/></svg>'},
+    ],
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -142,7 +162,17 @@ html_static_path = []
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
 #
-# html_sidebars = {}
+# Furo sidebar components. version-switcher.html override sits after the brand
+html_sidebars = {
+    '**': [
+        'sidebar/brand.html',
+        'sidebar/version-switcher.html',
+        'sidebar/search.html',
+        'sidebar/scroll-start.html',
+        'sidebar/navigation.html',
+        'sidebar/scroll-end.html',
+    ]
+}
 
 # -- Options for HTMLHelp output ---------------------------------------------
 

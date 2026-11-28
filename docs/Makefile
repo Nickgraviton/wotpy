@@ -15,7 +15,13 @@ help:
 clean:
 	rm -fr _build && rm -fr _autosummary
 
-.PHONY: help Makefile
+# Build tags and develop branch. Then write a
+# root index.html redirecting to the develop build.
+multiversion:
+	sphinx-multiversion $(SOURCEDIR) $(BUILDDIR)
+	printf '<meta http-equiv="refresh" content="0; url=develop/index.html">\n' > $(BUILDDIR)/index.html
+
+.PHONY: help Makefile clean multiversion
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

@@ -63,19 +63,19 @@ Function codes
 
 The following function names and codes are understood by the binding:
 
-================================  =====  ====================
-Name                              Code   Entity
-================================  =====  ====================
-``readCoil``                      1      ``Coil``
-``readDiscreteInput``             2      ``DiscreteInput``
-``readHoldingRegisters``          3      ``HoldingRegister``
-``readInputRegisters``            4      ``InputRegister``
-``writeSingleCoil``               5      ``Coil``
-``writeSingleHoldingRegister``    6      ``HoldingRegister``
-``writeMultipleCoils``            15     ``Coil``
-``writeMultipleHoldingRegisters`` 16     ``HoldingRegister``
-``readDeviceIdentification``      43     \-
-================================  =====  ====================
+==================================  =====  ====================
+Name                                Code   Entity
+==================================  =====  ====================
+``readCoil``                        1      ``Coil``
+``readDiscreteInput``               2      ``DiscreteInput``
+``readHoldingRegisters``            3      ``HoldingRegister``
+``readInputRegisters``              4      ``InputRegister``
+``writeSingleCoil``                 5      ``Coil``
+``writeSingleHoldingRegister``      6      ``HoldingRegister``
+``writeMultipleCoils``              15     ``Coil``
+``writeMultipleHoldingRegisters``   16     ``HoldingRegister``
+``readDeviceIdentification``        43     \-
+==================================  =====  ====================
 
 When ``modv:function`` is not present the binding infers the function code from ``modv:entity``, the
 ``quantity`` and whether the operation is a read or a write. If ``modv:entity`` is missing as well,

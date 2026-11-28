@@ -101,14 +101,26 @@ uv sync --extra dev --extra docs --extra tests
 
 ### Building the documentation
 
-The docs are built with [Sphinx](https://www.sphinx-doc.org/), which is installed with the development dependencies above. Build them from the `docs/` directory:
+The docs are built with [Sphinx](https://www.sphinx-doc.org/) and the [Furo](https://pradyunsg.me/furo/) theme, installed with the development dependencies above.
+
+#### Current documentation
+From the `docs/` directory:
 
 ```sh
 cd docs
 make html
 ```
+To preview, open `_build/html/index.html` in a browser.
 
-The output is written to `docs/_build/html/`. Open `docs/_build/html/index.html` in a browser to preview. Use `make clean html` to force a full rebuild.
+#### Multiple version documentation
+From the `docs/` directory:
+
+```sh
+cd docs
+make multiversion   
+```
+
+`make multiversion` builds every release tag above `v0.17.0` plus the `develop` branch (as `develop/`) with [sphinx-multiversion](https://github.com/scylladb/sphinx-multiversion-scylla), and writes a root `index.html` redirecting to `develop/`. Open `docs/_build/index.html` in a browser (serve over HTTP, e.g. `python3 -m http.server`). Use `make clean && make multiversion` to force a full rebuild.
 
 ## Running tests on Windows
 

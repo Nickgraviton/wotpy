@@ -2,8 +2,8 @@
 
 .. _getting-started:
 
-Getting Started with wotpy
-==========================
+Getting Started
+===============
 
 wotpy is a Python implementation of the `W3C WoT Runtime and Scripting API <https://www.w3.org/WoT/>`__.
 It lets you build Things (producers) and Consumers in Python, with built-in protocol bindings for HTTP, WebSockets, MQTT, CoAP, and Zenoh.
