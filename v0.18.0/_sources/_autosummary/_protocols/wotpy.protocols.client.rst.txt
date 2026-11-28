@@ -1,0 +1,12 @@
+wotpy.protocols.client
+======================
+
+.. automodule:: wotpy.protocols.client
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BaseProtocolClient
+   

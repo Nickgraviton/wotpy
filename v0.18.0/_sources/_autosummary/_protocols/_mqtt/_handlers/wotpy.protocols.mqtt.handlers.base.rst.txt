@@ -1,0 +1,12 @@
+wotpy.protocols.mqtt.handlers.base
+==================================
+
+.. automodule:: wotpy.protocols.mqtt.handlers.base
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BaseMQTTHandler
+   

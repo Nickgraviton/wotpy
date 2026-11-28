@@ -1,0 +1,6 @@
+wotpy.protocols.coap.resources
+==============================
+
+.. automodule:: wotpy.protocols.coap.resources
+
+   

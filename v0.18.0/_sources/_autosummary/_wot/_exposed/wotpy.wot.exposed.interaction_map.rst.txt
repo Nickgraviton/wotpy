@@ -1,0 +1,18 @@
+wotpy.wot.exposed.interaction\_map
+==================================
+
+.. automodule:: wotpy.wot.exposed.interaction_map
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ExposedThingAction
+      ExposedThingActionDict
+      ExposedThingEvent
+      ExposedThingEventDict
+      ExposedThingInteractionDict
+      ExposedThingProperty
+      ExposedThingPropertyDict
+   

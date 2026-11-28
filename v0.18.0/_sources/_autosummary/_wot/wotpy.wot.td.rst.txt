@@ -1,0 +1,12 @@
+wotpy.wot.td
+============
+
+.. automodule:: wotpy.wot.td
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ThingDescription
+   

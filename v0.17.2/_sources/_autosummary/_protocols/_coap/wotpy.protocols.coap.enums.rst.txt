@@ -1,0 +1,12 @@
+wotpy.protocols.coap.enums
+==========================
+
+.. automodule:: wotpy.protocols.coap.enums
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      CoAPSchemes
+   

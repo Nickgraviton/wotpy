@@ -1,0 +1,12 @@
+wotpy.protocols.ws.server
+=========================
+
+.. automodule:: wotpy.protocols.ws.server
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      WebsocketServer
+   

@@ -1,0 +1,6 @@
+﻿wotpy.wot
+=========
+
+.. automodule:: wotpy.wot
+
+   

@@ -1,0 +1,12 @@
+wotpy.protocols.http.server
+===========================
+
+.. automodule:: wotpy.protocols.http.server
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      HTTPServer
+   

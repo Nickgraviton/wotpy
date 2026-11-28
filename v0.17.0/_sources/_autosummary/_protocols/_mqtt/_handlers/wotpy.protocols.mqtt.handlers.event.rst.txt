@@ -1,0 +1,12 @@
+wotpy.protocols.mqtt.handlers.event
+===================================
+
+.. automodule:: wotpy.protocols.mqtt.handlers.event
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      EventMQTTHandler
+   

@@ -1,0 +1,12 @@
+wotpy.wot.exposed.thing
+=======================
+
+.. automodule:: wotpy.wot.exposed.thing
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ExposedThing
+   

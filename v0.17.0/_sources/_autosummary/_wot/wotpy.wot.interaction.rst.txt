@@ -1,0 +1,15 @@
+wotpy.wot.interaction
+=====================
+
+.. automodule:: wotpy.wot.interaction
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Action
+      Event
+      InteractionPattern
+      Property
+   
